@@ -383,7 +383,7 @@ export default async function EventDetailsPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // ⭐ The fix — unwrap the params Promise
+  // ⭐ Correct: unwrap params on the SERVER
   const { id } = await params;
 
   const eventId = Number(id);
@@ -393,6 +393,5 @@ export default async function EventDetailsPage({
     return <div className="p-10 text-red-500">Event not found.</div>;
   }
 
-  // Pass event data to client component
   return <EventDetailsClient event={event} />;
 }

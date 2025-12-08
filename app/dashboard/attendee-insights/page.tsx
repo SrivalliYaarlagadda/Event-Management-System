@@ -1,122 +1,7 @@
-// "use client";
-// import Image from "next/image";
 
-// export default function AttendeeInsights() {
-//   return (
-//     <div className="min-h-screen bg-[#F7F9FC] flex">
-
-//       {/* ================= SIDEBAR ================= */}
-//       <aside
-//         className="
-//           w-64 bg-white shadow-md p-6 space-y-6
-//           hidden md:block   /* Sidebar visible only on md+ screens */
-//           md:flex-shrink-0
-//         "
-//       >
-//         <h2 className="text-xl font-bold">EventHub</h2>
-//         <p className="text-xs text-gray-500 -mt-3">Event Management</p>
-
-//         <nav className="space-y-3 mt-6">
-//           <a
-//             href="/dashboard"
-//             className="flex items-center gap-3 text-gray-700 hover:text-black p-2 rounded-lg"
-//           >
-//             <Image src="/overviewico.png" width={20} height={20} alt="Overview" />
-//             Overview
-//           </a>
-
-//           <a
-//             href="/dashboard/browse"
-//             className="flex items-center gap-3 text-gray-700 hover:text-black p-2 rounded-lg"
-//           >
-//             <Image src="/browseeventico.png" width={20} height={20} alt="Browse Events" />
-//             Browse Events
-//           </a>
-
-//           <a
-//             href="/dashboard/attendee-insights"
-//             className="flex items-center gap-3 text-blue-600 font-medium bg-blue-50 p-2 rounded-lg"
-//           >
-//             <Image src="/atendeeico.png" width={20} height={20} alt="Attendee Insights" />
-//             Attendee Insights
-//           </a>
-//         </nav>
-//       </aside>
-
-//       {/* ================= MAIN CONTENT ================= */}
-//       <main className="flex-1 p-6 sm:p-10">
-
-//         {/* PAGE TITLE */}
-//         <h1 className="text-2xl font-bold">Attendee Insights</h1>
-//         <p className="text-gray-500 text-sm mt-1">
-//           Understand your audience demographics and engagement.
-//         </p>
-
-//         {/* ================= IMAGE GRID ================= */}
-//         <div
-//           className="
-//             grid 
-//             grid-cols-1 
-//             sm:grid-cols-2   /* 2 columns on tablets & desktop */
-//             gap-6 
-//             mt-8
-//           "
-//         >
-//           {/* AGE DISTRIBUTION */}
-//           <div className="bg-white p-6 rounded-xl shadow">
-//             <h3 className="font-semibold mb-4">Age Distribution</h3>
-//             <Image
-//               src="/agedist.png"
-//               width={500}
-//               height={350}
-//               alt="Age Distribution"
-//               className="w-full h-auto"
-//             />
-//           </div>
-
-//           {/* TOP LOCATIONS */}
-//           <div className="bg-white p-6 rounded-xl shadow">
-//             <h3 className="font-semibold mb-4">Top Locations</h3>
-//             <Image
-//               src="/toplocation.png"
-//               width={500}
-//               height={350}
-//               alt="Top Locations"
-//               className="w-full h-auto"
-//             />
-//           </div>
-
-//           {/* ENGAGEMENT TRENDS */}
-//           <div className="bg-white p-6 rounded-xl shadow">
-//             <h3 className="font-semibold mb-4">Engagement Trends</h3>
-//             <Image
-//               src="/trends.png"
-//               width={500}
-//               height={350}
-//               alt="Engagement Trends"
-//               className="w-full h-auto"
-//             />
-//           </div>
-
-//           {/* INTEREST CATEGORIES */}
-//           <div className="bg-white p-6 rounded-xl shadow">
-//             <h3 className="font-semibold mb-4">Interest Categories</h3>
-//             <Image
-//               src="/interest.png"
-//               width={500}
-//               height={350}
-//               alt="Interest Categories"
-//               className="w-full h-auto"
-//             />
-//           </div>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import {
@@ -137,6 +22,12 @@ import {
 
 export default function AttendeeInsights() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // ⭐ PAGE LOADING ANIMATION
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // ====================  RECHARTS DATA  ====================
   const ageData = [
@@ -236,7 +127,11 @@ export default function AttendeeInsights() {
       </aside>
 
       {/* ================= MAIN CONTENT ================= */}
-      <main className="flex-1 md:ml-64 p-6 sm:p-10">
+      <main
+        className={`flex-1 md:ml-64 p-6 sm:p-10 transition-all duration-500 ${
+          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+        }`}
+      >
 
         {/* ======== MOBILE HAMBURGER ======== */}
         <div className="md:hidden mb-6 flex justify-between items-center">
@@ -287,7 +182,7 @@ export default function AttendeeInsights() {
             </div>
           </div>
 
-          {/* ENGAGEMENT TRENDS */}
+          {/* ENGAGEMENT */}
           <div className="bg-white p-6 rounded-xl shadow max-w-[500px] w-full mx-auto">
             <h3 className="font-semibold mb-4">Engagement Trends</h3>
             <div className="h-64">

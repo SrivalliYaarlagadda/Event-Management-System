@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -17,13 +18,18 @@ import {
 export default function EventDetailsClient({ event }: any) {
   const router = useRouter();
 
-  // ⭐ We already receive the event from the server component
   const eventId = event.id;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [downloading, setDownloading] = useState(false);
+
+  // ⭐ PAGE LOAD ANIMATION
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
 
   const availabilityPercent = Math.round(
     (event.attendees / event.maxAttendees) * 100
@@ -142,14 +148,17 @@ export default function EventDetailsClient({ event }: any) {
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 md:ml-64 p-6 sm:p-10">
-        
-        {/* MOBILE MENU BUTTON */}
+      <main
+        className={`flex-1 md:ml-64 p-6 sm:p-10 transition-all duration-700 ${
+          loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`}
+      >
+        {/* MOBILE MENU */}
         <div className="md:hidden mb-4 flex justify-between items-center">
           <button className="text-3xl" onClick={() => setSidebarOpen(true)}>☰</button>
         </div>
 
-        {/* BACK BUTTON */}
+        {/* BACK */}
         <button onClick={() => router.push("/dashboard/browse")} className="text-sm text-gray-600 hover:text-black mb-4">
           ← Back to Events
         </button>
@@ -191,7 +200,7 @@ export default function EventDetailsClient({ event }: any) {
 
         {/* STATS + ACTIONS */}
         <div className="mt-6 flex flex-col lg:flex-row gap-6">
-          
+
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 flex-1">
             <StatCard icon="/atendeeico1.png" label="Attendees" value={event.attendees} />
@@ -241,7 +250,7 @@ export default function EventDetailsClient({ event }: any) {
           </div>
         </div>
 
-        {/* AVAILABILITY + ATTENDEES */}
+        {/* AVAILABILITY + LIST */}
         <div className="mt-6 grid grid-cols-1 xl:grid-cols-[2fr,1.3fr] gap-6">
           
           {/* Availability */}
@@ -281,7 +290,7 @@ export default function EventDetailsClient({ event }: any) {
             </div>
           </div>
 
-          {/* Ticket Chart */}
+          {/* Chart */}
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-sm font-semibold mb-4">Ticket Sales Trend</h2>
 
@@ -371,7 +380,10 @@ export default function EventDetailsClient({ event }: any) {
 /* STAT CARD */
 function StatCard({ icon, label, value }: any) {
   return (
-    <div className="bg-white p-5 rounded-xl shadow-sm flex flex-col">
+    <div
+      className="bg-white p-5 rounded-xl shadow-sm flex flex-col 
+      transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+    >
       <div className="flex items-center gap-3">
         <Image src={icon} width={34} height={34} alt={label} />
         <p className="text-xs text-gray-500">{label}</p>
